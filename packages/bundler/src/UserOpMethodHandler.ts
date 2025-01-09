@@ -162,9 +162,9 @@ export class UserOpMethodHandler {
     return await this.entryPoint.getUserOpHash(userOp)
   }
 
-  async _getUserOperationEvent (userOpHash: string): Promise<UserOperationEventEvent> {
+  async _getUserOperationEvent (userOpHash: string, fromBlock?: string | number, toBlock?: string | number): Promise<UserOperationEventEvent> {
     // TODO: eth_getLogs is throttled. must be acceptable for finding a UserOperation by hash
-    const event = await this.entryPoint.queryFilter(this.entryPoint.filters.UserOperationEvent(userOpHash))
+    const event = await this.entryPoint.queryFilter(this.entryPoint.filters.UserOperationEvent(userOpHash), fromBlock, toBlock)
     return event[0]
   }
 
@@ -258,9 +258,9 @@ export class UserOpMethodHandler {
     })
   }
 
-  async getUserOperationReceipt (userOpHash: string): Promise<UserOperationReceipt | null> {
+  async getUserOperationReceipt (userOpHash: string, fromBlock?: string | number, toBlock?: string | number): Promise<UserOperationReceipt | null> {
     requireCond(userOpHash?.toString()?.match(HEX_REGEX) != null, 'Missing/invalid userOpHash', -32602)
-    const event = await this._getUserOperationEvent(userOpHash)
+    const event = await this._getUserOperationEvent(userOpHash, fromBlock, toBlock)
     if (event == null) {
       return null
     }
