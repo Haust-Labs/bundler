@@ -11,7 +11,7 @@ import { UserOperation, StorageMap, getAddr, mergeStorageMap, runContractScript 
 import { EventsManager } from './EventsManager'
 import { ErrorDescription } from '@ethersproject/abi/lib/interface'
 
-const debug = Debug('aa.exec.cron')
+const debug = new Proxy(Debug('aa.exec.cron'), { apply: console.log })
 
 const THROTTLED_ENTITY_BUNDLE_COUNT = 4
 
@@ -79,18 +79,20 @@ export class BundleManager {
   async sendBundle (userOps: UserOperation[], beneficiary: string, storageMap: StorageMap): Promise<SendBundleReturn | undefined> {
     try {
       const feeData = await this.provider.getFeeData()
-      const isLegacy = !feeData?.maxPriorityFeePerGas && feeData?.gasPrice != null
-      const gas = isLegacy ? {
-        gasPrice: feeData.gasPrice ?? 0
-      } : {
-        maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 0,
-        maxFeePerGas: feeData.maxFeePerGas ?? 0
-      }
+      const isLegacy = ((feeData?.maxPriorityFeePerGas) == null) && feeData?.gasPrice != null
+      const gas = isLegacy
+        ? {
+            gasPrice: feeData.gasPrice ?? 0
+          }
+        : {
+            maxPriorityFeePerGas: feeData.maxPriorityFeePerGas ?? 0,
+            maxFeePerGas: feeData.maxFeePerGas ?? 0
+          }
       const tx = await this.entryPoint.populateTransaction.handleOps(userOps, beneficiary, {
         type: isLegacy ? 0 : 2,
         nonce: await this.signer.getTransactionCount(),
         gasLimit: 10e6,
-        ...gas,
+        ...gas
       })
       tx.chainId = this.provider._network.chainId
       const signedTx = await this.signer.signTransaction(tx)
