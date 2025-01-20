@@ -41,19 +41,19 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:${{ github.ref_name }} 
+          tags: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:${{ github.ref_name }}
 
       - name: Logout from GitHub Container Registry
         run: docker logout ghcr.io
-        
+
       - name: Checkout haust-infra repository
         uses: actions/checkout@v2
         with:
           repository: Haust-Labs/haust-infra
           token: ${{ secrets.TOKEN }}
-          path: haust-wallet-infra
+          path: haust-infra
           ref: master
-            
+
       - name: Update image tag in stage-values.yaml
         run: |
           ls
