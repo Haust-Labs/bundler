@@ -17,7 +17,7 @@ import { runBundler } from '../runBundler'
 import { BundlerServer } from '../BundlerServer'
 import { getNetworkProvider } from '../Config'
 
-const ENTRY_POINT = '0xD4A6098c22Fde18F56204d61eC62E19227cDE193'
+const ENTRY_POINT = '0x0d2bd3ba481f09aaed7787e57d43e10d76ee1185'
 
 class Runner {
   bundlerProvider!: HttpRpcClient
