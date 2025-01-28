@@ -8,4 +8,4 @@ RUN yarn install
 
 RUN yarn preprocess
 
-CMD ["yarn", "run", "bundler", "--unsafe", "--network", "https://rpc-test.haust.network/", "--mnemonic", "./localconfig/mnemonic.txt"]
+CMD ["yarn", "run", "bundler", "--unsafe", "--network", "https://rpc-testnet.haust.app/", "--mnemonic", "./localconfig/mnemonic.txt"]
