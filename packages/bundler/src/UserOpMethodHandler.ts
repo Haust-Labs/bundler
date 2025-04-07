@@ -95,6 +95,7 @@ export class UserOpMethodHandler {
    * @param entryPointInput
    */
   async estimateUserOperationGas (userOp1: UserOperationStruct, entryPointInput: string): Promise<EstimateUserOpGasResult> {
+    console.log('estimateUserOperationGas', JSON.stringify(userOp1), entryPointInput)
     const userOp = {
       // default values for missing fields.
       paymasterAndData: '0x',
@@ -104,6 +105,7 @@ export class UserOpMethodHandler {
       verificationGasLimit: 10e6,
       ...await resolveProperties(userOp1) as any
     }
+    console.log('estimateUserOperationGas userOp', JSON.stringify(userOp))
 
     // todo: checks the existence of parameters, but since we hexlify the inputs, it fails to validate
     await this._validateParameters(deepHexlify(userOp), entryPointInput)
@@ -152,9 +154,11 @@ export class UserOpMethodHandler {
   }
 
   async sendUserOperation (userOp1: UserOperationStruct, entryPointInput: string): Promise<string> {
+    console.log('sendUserOperation', JSON.stringify(userOp1), entryPointInput)
     await this._validateParameters(userOp1, entryPointInput)
 
     const userOp = await resolveProperties(userOp1)
+    console.log('sendUserOperation userOp', JSON.stringify(userOp))
 
     console.log(`UserOperation: Sender=${userOp.sender}  Nonce=${tostr(userOp.nonce)} EntryPoint=${entryPointInput} Paymaster=${getAddr(
       userOp.paymasterAndData)}`)
